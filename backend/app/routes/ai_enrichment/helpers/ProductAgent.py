@@ -2,42 +2,66 @@ from vertexai.preview.generative_models import GenerationConfig, GenerativeModel
 import os
 from dotenv import load_dotenv
 
+# Load environment variables from .env file
 load_dotenv()
 
 class ProductAgent:
-
     def __init__(
         self,
         gemini_model_version: str, 
         temperature: float = 0.0,
         max_output_tokens: int = 8192, 
     ):
-        PROJECT_ID = os.getenv("PROJECT_ID")
-        LOCATION = os.getenv("LOCATION")
+        """
+        Initializes the ProductAgent with the provided model version, temperature, and max output tokens.
+        Sets up the Vertex AI client and the generative model for product attribute recognition.
+        
+        Args:
+            gemini_model_version (str): The version of the Gemini model to use.
+            temperature (float, optional): Sampling temperature for the model. Default is 0.0.
+            max_output_tokens (int, optional): Maximum number of output tokens. Default is 8192.
+        """
+        PROJECT_ID = os.getenv("PROJECT_ID")  # Get project ID from environment variables
+        LOCATION = os.getenv("LOCATION")  # Get location from environment variables
         
         import vertexai
         
+        # Initialize Vertex AI with the project ID and location
         vertexai.init(project=PROJECT_ID, location=LOCATION)
 
+        # Set up generation configuration
         config = GenerationConfig(
             temperature=temperature,
             max_output_tokens=max_output_tokens
         )
 
-        # System instructions 
+        # System instructions to guide the model's behavior
         sys_inst = """
-            As an assistant for an online retailer, your task is to recognise attributes from the provided product image. 
+            As an assistant for an online retailer, your task is to recognize attributes from the provided product image. 
             Your answer should be strictly consistent with what is in the image. 
             If any attributes do not exist in the image, please return null for that attribute.
         """
 
+        # Initialize the generative model
         self.gemini_model = GenerativeModel(
             gemini_model_version, generation_config=config, system_instruction=sys_inst
         )
 
+    def format_prompt(self, product_name, brand, product_info, attribute_prompt, has_images=False, barcode=None) -> str:
+        """
+        Format the prompt for the generative model based on the product details and requested attributes.
         
-
-    def format_prompt(self, product_name, brand, product_info, attribute_prompt, has_images=False, barcode=None):
+        Args:
+            product_name (str): The name of the product.
+            brand (str): The brand of the product.
+            product_info (str): Additional product information, such as description or specifications.
+            attribute_prompt (str): The list of attributes to be enriched.
+            has_images (bool, optional): Flag to indicate if images are provided. Defaults to False.
+            barcode (str, optional): The barcode of the product. Defaults to None.
+        
+        Returns:
+            str: The formatted prompt string.
+        """
         prompt = f"""
         The following product is being analyzed:
     
@@ -45,6 +69,7 @@ class ProductAgent:
         Product Brand: {brand}
         """
     
+        # Include barcode if provided
         if barcode:
             prompt += f"\nBarcode: {barcode}\n"
     
@@ -56,7 +81,7 @@ class ProductAgent:
         {product_info}
     
         Instructions:
-        1. Use the provided product details, Google Search info {"and the provided image(s)" if has_images else ""} to verify, supplement, and correct attributes." 
+        1. Use the provided product details, Google Search info {"and the provided image(s)" if has_images else ""} to verify, supplement, and correct attributes. 
         2. Tailor your response to the specific product.
         3. If information is not available, return "Not Found". Do not speculate.
         4. Return a valid JSON object with all requested attribute keys.
@@ -68,7 +93,7 @@ class ProductAgent:
         - Output only the final JSON in Markdown format.
         """
     
-        return prompt.strip()      
+        return prompt.strip()  # Strip leading/trailing whitespace from the prompt text
 
     def generate_response(
         self,
@@ -79,11 +104,28 @@ class ProductAgent:
         image_parts=None,
         barcode=None
     ) -> str:
-        prompt_text = self.format_prompt(product_name, product_brand, product_info, attribute_prompt, barcode)
-        prompt_part = Part.from_text(prompt_text)
+        """
+        Generate a response from the model using the formatted prompt, and return the model's output.
 
+        Args:
+            product_brand (str): The brand of the product.
+            product_name (str): The name of the product.
+            product_info (str): Additional product information, such as description or specifications.
+            attribute_prompt (str): The list of attributes to be enriched.
+            image_parts (list, optional): List of image parts for the product (if any). Defaults to None.
+            barcode (str, optional): The barcode of the product. Defaults to None.
+        
+        Returns:
+            str: The generated response from the model.
+        """
+        # Format the prompt with the provided product details
+        prompt_text = self.format_prompt(product_name, product_brand, product_info, attribute_prompt, barcode)
+        prompt_part = Part.from_text(prompt_text)  # Create a Part from the prompt text
+
+        # Include image parts in the input if provided
         input_parts = image_parts + [prompt_part] if image_parts else [prompt_part]
 
+        # Define the response schema
         response_schema = {
             "type": "OBJECT",
             "properties": {
@@ -100,13 +142,13 @@ class ProductAgent:
             },
         }
         
+        # Request a response from the model using the generated content
         response = self.gemini_model.generate_content(
-            contents = input_parts,
-            generation_config = {
+            contents=input_parts,
+            generation_config={
                 'response_mime_type': 'application/json',
                 'response_schema': response_schema,
-            })
-        return response
-
+            }
+        )
         
-        
+        return response  # Return the generated response
