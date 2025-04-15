@@ -67,8 +67,6 @@ Retailers often have thousands of products (SKUs) with minimal information — j
 - 🔗 **Frontend**: https://product-enrichment-page.vercel.app/  
 - 🔗 **Backend**: https://fastapi-gemini-541848277869.us-central1.run.app/
 
-> Replace with your actual deployment URLs
-
 ---
 
 ## 📦 Getting Started (Locally)
