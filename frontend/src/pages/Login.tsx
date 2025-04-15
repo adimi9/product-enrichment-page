@@ -26,7 +26,7 @@ const Login: React.FC = () => {
 
       localStorage.setItem('access_token', response.data.access);
       toast.success('Login successful!');
-      navigate('/'); 
+      navigate('/main'); 
     } catch (error: any) {
       const errMsg =
         error.response?.data?.detail || 'Invalid credentials. Please try again.';
