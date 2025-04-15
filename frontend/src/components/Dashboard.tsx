@@ -8,24 +8,10 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react"; // Icon for the 'Create New Product' button
 import ProductTable from './ProductTable'; // Table to display existing products
 import CreateProductModal from './CreateProductModal'; // Modal for creating a new product
-import { useProductStore } from '@/store/productStore'; // Custom hook to manage product store
-import { Product } from '@/model/ProductData'; // Import Product type directly for type safety
-import { toast } from 'sonner'; // Notification library for success/error messages
 
 const Dashboard: React.FC = () => {
   // State for managing the visibility of the product creation modal
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
-  // Destructuring to get the `addProduct` function from the product store
-  const { addProduct } = useProductStore();
-
-  // Handler to create a product, called from the CreateProductModal
-  const handleCreateProduct = (productData: Product) => {  
-    // Add the new product to the product store
-    addProduct(productData);
-    // Show a success notification after the product is created
-    toast.success('Product created successfully!');
-  };
 
   return (
     <div className="container mx-auto p-6 space-y-6">

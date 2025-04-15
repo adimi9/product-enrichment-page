@@ -1,3 +1,8 @@
+/**
+ * @file RenderAllColumnsBody.tsx
+ * @description Renders the body of a table with dynamic content based on product attributes, including selection checkboxes, product details, and custom attribute cells.
+ */
+
 import { TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Product } from "@/model/ProductData";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,89 +19,92 @@ import { SingleSelectCell } from "./cells/SingleSelectCell";
 import { productAttributes } from "@/model/Attributes";
 
 export const renderAllColumnsBody = (
-  products: Product[],
-  selectedProductIds: string[],
-  isProductSelected: (id: string) => boolean,
-  toggleProductSelection: (id: string) => void,
-  handleEnrichSingle: (productId: string) => void
+  products: Product[], // Array of products to display
+  selectedProductIds: string[], // List of selected product IDs
+  isProductSelected: (id: string) => boolean, // Function to check if a product is selected
+  toggleProductSelection: (id: string) => void, // Function to toggle product selection
+  handleEnrichSingle: (productId: string) => void // Function to trigger enrichment for a single product
 ) => (
   <TableBody>
     {products.length === 0 ? (
+      // No products available, show a placeholder row
       <TableRow>
         <TableCell colSpan={16} className="text-center py-10 text-muted-foreground">
+          No products found
         </TableCell>
       </TableRow>
     ) : (
+      // Map through products to render each row
       products.map((product: Product) => (
         <TableRow key={`all-${product.id}`} className="hover:bg-slate-50">
+          {/* Checkbox for selecting products */}
           <TableCell className="py-3 px-3">
             <Checkbox
-              checked={isProductSelected(product.id)}
-              onCheckedChange={() => toggleProductSelection(product.id)}
-              aria-label={`Select ${product.product_name}`}
+              checked={isProductSelected(product.id)} // Check if the product is selected
+              onCheckedChange={() => toggleProductSelection(product.id)} // Toggle product selection
+              aria-label={`Select ${product.product_name}`} // Accessibility label
             />
           </TableCell>
 
-          {/* ImageCell */}
+          {/* Image cell displaying the product image */}
           <ImageCell images={product.images} />
 
-          {/* BarcodeCell */}
+          {/* Barcode cell displaying the product barcode */}
           <BarcodeCell barcode={product.barcode} />
 
-          {/* NameCell */}
+          {/* Name cell displaying the product name */}
           <NameCell productName={product.product_name} />
 
-          {/* BrandCell */}
+          {/* Brand cell displaying the product brand */}
           <BrandCell brand={product.brand} />
 
-          {/* EnrichmentStatusCell */}
+          {/* Enrichment status cell displaying enrichment state and action */}
           <EnrichmentStatusCell
-            isEnriched={product.isEnriched}
-            onEnrich={() => handleEnrichSingle(product.id)}
+            isEnriched={product.isEnriched} // Check if product is enriched
+            onEnrich={() => handleEnrichSingle(product.id)} // Trigger enrichment action
           />
-          {/* Dynamic Attributes Cells */}
-          {product.attributes && Object.entries(product.attributes).map(([key, { value, unit, options }]) => {
-            // Determine which component to render based on attribute type
-            const attribute = productAttributes.find(attr => attr.key === key);
-            if (!attribute) return null;
 
+          {/* Dynamic rendering of attribute cells */}
+          {product.attributes && Object.entries(product.attributes).map(([key, { value, unit, options }]) => {
+            const attribute = productAttributes.find(attr => attr.key === key); // Find the attribute metadata by key
+            if (!attribute) return null; // Return null if attribute is not found
+
+            // Render different cell types based on the attribute type
             switch (attribute.type) {
               case "measure":
                 return (
                   <TableCell key={key} className="py-3 px-3">
-                    <MeasureCell value={String(value)} unit={unit} />
+                    <MeasureCell value={String(value)} unit={unit} /> {/* Render measure cell */}
                   </TableCell>
                 );
               case "multiple_values":
                 return (
                   <TableCell key={key} className="py-3 px-3">
-                    <MultipleValuesCell values={
-                        Array.isArray(value) ? value : [String(value)]
-                    } />
+                    <MultipleValuesCell values={Array.isArray(value) ? value : [String(value)]} /> {/* Render multiple values cell */}
                   </TableCell>
                 );
               case "rich_text":
                 return (
                   <TableCell key={key} className="py-3 px-3">
-                    <RichTextCell value={String(value)} />
+                    <RichTextCell value={String(value)} /> {/* Render rich text cell */}
                   </TableCell>
                 );
               case "single_select":
                 return (
                   <TableCell key={key} className="py-3 px-3">
-                    <SingleSelectCell value={String(value)} options={options} />
+                    <SingleSelectCell value={String(value)} options={options} /> {/* Render single select cell */}
                   </TableCell>
                 );
               case "short_text":
                 return (
                   <TableCell key={key} className="py-3 px-3">
-                    <ShortTextCell value={String(value)} />
+                    <ShortTextCell value={String(value)} /> {/* Render short text cell */}
                   </TableCell>
                 );
               default:
                 return (
                   <TableCell key={key} className="py-3 px-3">
-                    <div>{value}</div>
+                    <div>{value}</div> {/* Render default cell for unknown types */}
                   </TableCell>
                 );
             }
