@@ -7,7 +7,8 @@ app = FastAPI()
 origins = [
     "http://localhost:8080",
     "http://localhost:5173",
-    "https://product-enrichment-page-cqu6h04je-aditis-projects-76071257.vercel.app"
+    "https://product-enrichment-page-cqu6h04je-aditis-projects-76071257.vercel.app",
+    "https://product-enrichment-page.vercel.app"
 ]
 
 app.add_middleware(
