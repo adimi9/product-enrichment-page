@@ -49,7 +49,6 @@ Retailers often have thousands of products (SKUs) with minimal information — j
 4. Backend sends data to the AI engine (Gemini + Google Search)
 5. AI generates and returns enriched attributes:
    - Descriptions
-   - Categories
    - Specs (in rich, structured format)
 6. Data is saved per user and updated in the UI
 
