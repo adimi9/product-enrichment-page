@@ -4,7 +4,6 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { useProductStore } from '@/store/productStore';  // Import custom product store hook
 import { ScrollArea } from "@/components/ui/scroll-area";  // For horizontally scrollable areas
 import { toast } from 'sonner';  // For displaying toast notifications
 import { Table } from "@/components/ui/table";  // Import Table component for displaying products
