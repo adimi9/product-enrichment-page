@@ -26,10 +26,11 @@ const App = () => (
       <BrowserRouter>  {/* Wraps the app in the router for navigation */}
         <Routes>
           {/* Define application routes */}
-          <Route path="/" element={<Login />} />  {/* Home page */}
+          <Route path="/" element={<Login />} />  {/* Login page */}
           <Route path="/login" element={<Login />} />  {/* Login page */}
           <Route path="/register" element={<Register />} />  {/* Register page */}
           <Route path="*" element={<NotFound />} />  {/* Catch-all route for unknown paths (404 page) */}
+          <Route path="/main" element={<Index />} /> {/* Home page */}
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
