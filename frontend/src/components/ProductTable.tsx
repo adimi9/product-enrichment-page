@@ -127,6 +127,7 @@ const ProductTable: React.FC = () => {
       if (res.status === 200) {
         toast.success(`${products.length} product(s) enriched successfully!`, { id: toastId });
         fetchProducts();  // Re-fetch products after enrichment
+        clearSelectedProducts(); // Set all checkboxes to false
       }
     } catch (err) {
       toast.error("Failed to enrich selected products.", { id: toastId });
