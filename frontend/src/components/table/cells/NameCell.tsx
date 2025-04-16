@@ -13,7 +13,7 @@ interface NameCellProps {
 const NameCell: React.FC<NameCellProps> = ({ productName }) => (
   // Render the product name inside a TableCell with custom styling
   <TableCell className="font-medium whitespace-nowrap">
-    {productName}  // Display the product name
+    {productName}  {/* Display the product name */}
   </TableCell>
 );
 
