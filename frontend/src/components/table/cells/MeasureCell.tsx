@@ -14,11 +14,6 @@ export const MeasureCell: React.FC<MeasureCellProps> = ({ value, unit }) => {
     <div className="text-sm text-gray-700">
       {/* Display the measurement value */}
       {value}
-
-      {/* Conditionally render the unit if it's provided */}
-      {unit && (
-        <span className="text-gray-500 text-xs ml-1">{unit}</span>  // Display the unit in smaller, lighter text
-      )}
     </div>
   );
 };
