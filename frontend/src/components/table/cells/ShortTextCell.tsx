@@ -13,7 +13,7 @@ export const ShortTextCell: React.FC<ShortTextCellProps> = ({ value }) => {
   return (
     // Render the short text inside a styled container
     <div className="text-sm text-gray-700">
-      {value}  // Display the text value
+      {value}  {/* Display the text value */}
     </div>
   );
 };

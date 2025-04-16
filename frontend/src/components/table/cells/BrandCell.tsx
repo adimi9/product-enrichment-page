@@ -15,7 +15,7 @@ interface BrandCellProps {
 const BrandCell: React.FC<BrandCellProps> = ({ brand }) => (
   // Render the brand name inside a TableCell with no text wrapping and specific styling
   <TableCell className="whitespace-nowrap text-slate-600">
-    {brand}  // Display the brand name
+    {brand}  {/* Display the brand name */}
   </TableCell>
 );
 
