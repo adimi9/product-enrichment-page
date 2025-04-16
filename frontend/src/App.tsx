@@ -29,8 +29,8 @@ const App = () => (
           <Route path="/" element={<Login />} />  {/* Login page */}
           <Route path="/login" element={<Login />} />  {/* Login page */}
           <Route path="/register" element={<Register />} />  {/* Register page */}
-          <Route path="*" element={<NotFound />} />  {/* Catch-all route for unknown paths (404 page) */}
           <Route path="/main" element={<Index />} /> {/* Home page */}
+          <Route path="*" element={<NotFound />} />  {/* Catch-all route for unknown paths (404 page) */}
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
